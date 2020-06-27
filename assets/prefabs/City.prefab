@@ -43,8 +43,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
-      "height": 150
+      "width": 240,
+      "height": 240
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -117,8 +117,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
-      "height": 150
+      "width": 240,
+      "height": 240
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -184,8 +184,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
-      "height": 100
+      "width": 160,
+      "height": 160
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -197,7 +197,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        35,
+        30,
         0,
         0,
         0,
@@ -264,9 +264,9 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 41,
-    "_left": 25,
-    "_right": 25,
-    "_top": -10,
+    "_left": 40,
+    "_right": 40,
+    "_top": 10,
     "_bottom": 81,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
@@ -294,7 +294,7 @@
   {
     "__type__": "cc.Node",
     "_name": "Name",
-    "_objFlags": 512,
+    "_objFlags": 0,
     "_parent": {
       "__id__": 2
     },
@@ -321,8 +321,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
-      "height": 40
+      "width": 240,
+      "height": 55
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -334,7 +334,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -50,
+        -87.5,
         0,
         0,
         0,
@@ -374,10 +374,10 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "纳博讷高卢",
-    "_N$string": "纳博讷高卢",
-    "_fontSize": 30,
-    "_lineHeight": 40,
+    "_string": "纳博特高卢",
+    "_N$string": "纳博特高卢",
+    "_fontSize": 40,
+    "_lineHeight": 44,
     "_enableWrapText": false,
     "_N$file": null,
     "_isSystemFontUsed": true,
@@ -616,9 +616,6 @@
     "cityName": {
       "__id__": 8
     },
-    "nickname": "",
-    "level": 0,
-    "people": 0,
     "_id": ""
   },
   {

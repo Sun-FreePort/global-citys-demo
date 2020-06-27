@@ -16,17 +16,51 @@ export default class City extends cc.Component {
     @property(cc.Label)
     cityName: cc.Label = null;
 
-    @property
-    nickname: string = '';
+    x: number = 0;
+    y: number = 0;
 
-    @property
     level: number = 0;
-
-    @property
     people: number = 0;
 
-    init (data: object) {
-        // 参数完整性检查
+    init (data: {height: number, landform: number, name: string, level: number, people: number, x: number, y: number}) {
+        this.cityName.string = data.name;
+        // if (window.ENV === "dev") {
+        //     this.cityName.string = data.x + '/' + data.y;
+        // }
+
+        this.mapShow.spriteFrame = window.resources.terrains[data.landform];
+        this.cityShow.spriteFrame = window.resources.citys[data.level];
+        
+        this.level = data.level;
+        this.people = data.people;
+        this.x = data.x;
+        this.y = data.y;
+    }
+
+    upgrade (data: {height?: number, landform?: number, name?: string, level?: number, people?: number, x?: number, y?: number}) {
+        if (data.name) {
+            this.cityName.string = data.name;
+        }
+
+        if (data.level) {
+            this.cityShow.spriteFrame = window.resources.citys[data.level];
+        }
+
+        if (data.landform) {
+            this.mapShow.spriteFrame = window.resources.terrains[data.landform];
+        }
+
+        if (data.people) {
+            this.people = data.people;
+        }
+
+        if (data.level) {
+            this.level = data.level;
+        }
+    }
+
+    getLocal () {
+        return {"x": this.x, "y": this.y}
     }
 
     save () {
@@ -42,8 +76,8 @@ export default class City extends cc.Component {
     // onLoad () {}
 
     start () {
-
     }
 
-    // update (dt) {}
+    // update (dt) {
+    // }
 }

@@ -3,14 +3,24 @@ declare global {
         resources: {
             terrains: Array<cc.SpriteFrame>,
             citys: Array<cc.SpriteFrame>,
+            audios: Array<cc.SpriteFrame>,
         },
+        ENV: string,
         support: Support,
+        config: {
+            citySize: Array<number>
+        },
         data: {
             maps: Array<
                 Array<{
-                    "height": boolean,
-                    "landform": string,
+                    "height": number,
+                    "landform": number,
+
+                    "name": string,
                     "people": number,
+                    "level": number,  // 城市等级
+
+                    "node"?: cc.Node,  // 城市节点
                 }>
             >,
             time: {
@@ -35,7 +45,7 @@ export default class Support {
                     break;
 
                 case "object":
-                    // TODO: ???
+                    this.checkType(values[key], path);
                     break;
 
                 default:

@@ -1,4 +1,4 @@
-class Grad {
+export default class Grad {
     x: number;
     y: number;
     z: number;

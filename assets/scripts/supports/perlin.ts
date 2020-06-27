@@ -13,6 +13,7 @@
  * attribution is appreciated.
  */
 import array = cc.js.array;
+import Grad from "./grad"
 
 export default class Perlin {
     grad3: Array<Grad> = [new Grad(1,1,0),new Grad(-1,1,0),new Grad(1,-1,0),new Grad(-1,-1,0),
