@@ -2,13 +2,13 @@ declare global {
     interface Window {
         resources: {
             terrains: Array<cc.SpriteFrame>,
-            citys: Array<cc.SpriteFrame>,
+            cities: Array<cc.SpriteFrame>,
             audios: Array<cc.SpriteFrame>,
         },
         ENV: string,
         support: Support,
         config: {
-            citySize: Array<number>
+            citiesSize: Array<number>
         },
         data: {
             maps: Array<

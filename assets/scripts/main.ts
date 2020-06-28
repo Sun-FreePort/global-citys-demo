@@ -33,21 +33,21 @@ export default class Main extends cc.Component {
 
     show: number = 4;
     showPoint: {x: number, y: number} = {x: 0, y: 0}
-    citysPool: cc.NodePool = null;
+    citiesPool: cc.NodePool = null;
 
     /**
      * 加载 Main 场景所需资源
      */
     loadAllResource () {
         window.resources = {
-            "terrains": new Array(),
-            "citys": new Array(),
-            "audios": new Array(),
+            "terrains": [],
+            "cities": [],
+            "audios": [],
         };
 
         let self = this;
         let terrainsStatus = false,
-            citysStatus = false;
+            citiesStatus = false;
 
         // 加载地图 Icon 资源
         cc.resources.loadDir("icons/terrains", cc.SpriteFrame, function (err, assets) {
@@ -56,19 +56,19 @@ export default class Main extends cc.Component {
             }
 
             terrainsStatus = true;
-            if (citysStatus) {
+            if (citiesStatus) {
                 self.idle = true;
                 self.generateMapShow();
             }
         });
 
         // 加载城市 Icon 资源
-        cc.resources.loadDir("icons/citys", cc.SpriteFrame, function (err, assets) {
+        cc.resources.loadDir("icons/cities", cc.SpriteFrame, function (err, assets) {
             for (let asset of assets) {
-                window.resources.citys[asset.name] = asset;
+                window.resources.cities[asset.name] = asset;
             }
 
-            citysStatus = true;
+            citiesStatus = true;
             if (terrainsStatus) {
                 self.idle = true;
                 self.generateMapShow();
@@ -141,7 +141,7 @@ export default class Main extends cc.Component {
         mapData[2][2].people = this.defaultPeople;
 
         let level = 0;
-        for (let limit of window.config.citySize) {
+        for (let limit of window.config.citiesSize) {
             if (mapData[2][2].people < limit) {
                 break;
             }
@@ -256,7 +256,7 @@ export default class Main extends cc.Component {
     generateMapShow () {
         // 重置地图节点
         this.mapNodes.destroyAllChildren();
-        this.citysPool = new cc.NodePool();
+        this.citiesPool = new cc.NodePool();
 
         let ix = this.show;
         while (ix-- > 0) {
@@ -331,7 +331,7 @@ export default class Main extends cc.Component {
             let position = city.getComponent('city').getLocal();
             window.data.maps[position.y][position.x].node = undefined;
 
-            this.citysPool.put(city);
+            this.citiesPool.put(city);
         }
 
         let ix = this.show;
@@ -340,8 +340,8 @@ export default class Main extends cc.Component {
 
             while (iy-- > 0) {
                 let city = null;
-                if (this.citysPool.size() > 0) {
-                    city = this.citysPool.get();
+                if (this.citiesPool.size() > 0) {
+                    city = this.citiesPool.get();
                 } else {
                     city = cc.instantiate(this.cityPrefab);
                 }
@@ -372,7 +372,7 @@ export default class Main extends cc.Component {
         window.ENV = "dev";
         window.support = new Support();
         window.config = {
-            "citySize": [
+            "citiesSize": [
                 50,  // 不稳定聚落
                 500,  // 微型城市
                 1950,  // 小型城市
@@ -409,8 +409,7 @@ export default class Main extends cc.Component {
         if (this.time > this.stepTime) {
             this.time = 0;
 
-            // 时间更新
-            this.upgradeTime();
+            this.upgradeTime();  // 时间更新
 
             // 地点更新
             for (let y in window.data.maps) {
@@ -423,6 +422,9 @@ export default class Main extends cc.Component {
         }
     }
 
+    /**
+     * 时间更新
+     */
     upgradeTime () {
         window.data.time.day += 10;
         if (window.data.time.day > 30) {
@@ -437,24 +439,27 @@ export default class Main extends cc.Component {
         }
     }
 
+    /**
+     * 人口更新
+     * @param point
+     */
     upgradePeople (point: {
-                "height": number,
-                "landform": number,
+        "height": number,
+        "landform": number,
 
-                "name": string,
-                "people": number,
-                "level": number,  // 城市等级
+        "name": string,
+        "people": number,
+        "level": number,  // 城市等级
 
-                "node"?: cc.Node,  // 城市节点
-            }) {
+        "node"?: cc.Node,  // 城市节点
+    }) {
         if (point.people < 1) {
             return false;
         }
         point.people *= 1.001;
-        cc.log(point.people);
 
         let level = 0;
-        for (let limit of window.config.citySize) {
+        for (let limit of window.config.citiesSize) {
             if (point.people < limit) {
                 break;
             }
