@@ -1,3 +1,5 @@
+import Point from "./point";
+
 declare global {
     interface Window {
         resources: {
@@ -11,18 +13,7 @@ declare global {
             citiesSize: Array<number>
         },
         data: {
-            maps: Array<
-                Array<{
-                    "height": number,
-                    "landform": number,
-
-                    "name": string,
-                    "people": number,
-                    "level": number,  // 城市等级
-
-                    "node"?: cc.Node,  // 城市节点
-                }>
-            >,
+            maps: Array<Array<Point>>,
             time: {
                 year: number,
                 month: number,

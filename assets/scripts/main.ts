@@ -1,6 +1,7 @@
 import url = cc.url;
 import Support from "./supports/support"
 import Perlin from "./supports/perlin"
+import Point from "./supports/point";
 
 const {ccclass, property} = cc._decorator;
 
@@ -90,7 +91,7 @@ export default class Main extends cc.Component {
         }
 
         // 生成地图
-        var height = Math.ceil(Math.random() * 10000);
+        let height = Math.ceil(Math.random() * 10000);
         let noise = new Perlin();
 
         let mapData = new Array(this.mapYMax);
@@ -107,7 +108,7 @@ export default class Main extends cc.Component {
                 let landform = null;
                 if (value < 60) {
                     landform = TERRAIN.sea;
-                } else if (value < 60 + step * 1) {
+                } else if (value < 60 + step) {
                     landform = TERRAIN.marsh;
                 } else if (value < 60 + step * 2) {
                     landform = TERRAIN.plane;
@@ -117,7 +118,7 @@ export default class Main extends cc.Component {
                     landform = TERRAIN.mountain;
                 }
 
-                mapData[mapY][mapX] = {
+                mapData[mapY][mapX] = new Point({
                     "x": mapX,
                     "y": mapY,
                     "height": value,
@@ -125,7 +126,7 @@ export default class Main extends cc.Component {
                     "name": this.placeBox(landform),
                     "people": 0,
                     "level": 0,
-                }
+                })
             }
         }
 
@@ -321,7 +322,7 @@ export default class Main extends cc.Component {
 
                 this.showPoint.y -= this.show;
                 break;
-            
+
             default:
                 // code...
                 break;
@@ -354,7 +355,7 @@ export default class Main extends cc.Component {
                 city.setPosition(cc.v2(randX, randY));
                 city.getComponent('city').init(
                     window.data.maps[iy + this.showPoint.y][ix + this.showPoint.x])
-                
+
                 window.data.maps[iy + this.showPoint.y][ix + this.showPoint.x].node = city;
             }
         }
@@ -403,9 +404,9 @@ export default class Main extends cc.Component {
         // this.generateMapShow();
     }
 
-    update (dt) {
+    update (dt: number) {
         this.time += dt;
-        
+
         if (this.time > this.stepTime) {
             this.time = 0;
 
@@ -417,6 +418,7 @@ export default class Main extends cc.Component {
                     // 地点：window.data.maps[y][x] 的更新
                     let point = window.data.maps[y][x];
                     this.upgradePeople(point);
+                    this.upgradeProduct(point);
                 }
             }
         }
@@ -440,23 +442,54 @@ export default class Main extends cc.Component {
     }
 
     /**
+     * 生产物资
+     */
+    upgradeProduct (point: Point) {
+        // 社群能提供 43.2% 的有效生产力
+        point.goods.foodstuffs += point.people * 0.432;
+        if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+            point.goods.foodstuffs = point.goods.foodstuffsMax;
+        }
+    }
+
+    /**
      * 人口更新
      * @param point
      */
-    upgradePeople (point: {
-        "height": number,
-        "landform": number,
-
-        "name": string,
-        "people": number,
-        "level": number,  // 城市等级
-
-        "node"?: cc.Node,  // 城市节点
-    }) {
+    upgradePeople (point: Point) {
         if (point.people < 1) {
             return false;
         }
-        point.people *= 1.001;
+        point.goods.foodstuffs -= point.people * 0.40;
+        if (point.goods.foodstuffs < 0) {
+            point.goods.foodstuffs = 0;
+
+            switch (Math.floor(point.state.famine)) {
+                case 0:
+                    point.state.famine += 0.2;
+                    break;
+                case 1:
+                    // TODO: 记录历史，饥荒开始
+                    point.state.famine += 0.1;
+                    point.people *= 0.98;
+                    break;
+                case 2:
+                    point.state.famine += 0.1;
+                    point.people *= 0.96;
+                    break;
+                case 3:
+                    point.state.famine += 0.1;
+                    point.people *= 0.93;
+                    break;
+            }
+            point.people *= 0.99;
+        } else {
+            point.state.famine -= 0.1;
+            if (point.state.famine < 0) {
+                point.state.famine = 0;
+            }
+            point.people *= 1.001;
+        }
 
         let level = 0;
         for (let limit of window.config.citiesSize) {
@@ -470,7 +503,7 @@ export default class Main extends cc.Component {
             if (point.node) {
                 point.node.getComponent('city').upgrade({
                     "level": level
-                })
+                });
             }
         }
     }
