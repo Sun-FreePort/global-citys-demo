@@ -374,12 +374,12 @@ export default class Main extends cc.Component {
         window.support = new Support();
         window.config = {
             "citiesSize": [
-                50,  // 不稳定聚落
-                500,  // 微型城市
-                1950,  // 小型城市
-                13000,  // 中型城市
-                60000,  // 大型城市
-                320000,  // 巨大城市
+                50,  // 不稳定聚落，生存物资
+                500,  // 微型城市，生存物资
+                1950,  // 小型城市，生存物资 + 奢侈品
+                13000,  // 中型城市，生存物资 + 奢侈品
+                60000,  // 大型城市，奢侈品
+                320000,  // 巨大城市，奢侈品
             ],
         };
 
@@ -417,9 +417,33 @@ export default class Main extends cc.Component {
                 for (let x in window.data.maps[y]) {
                     // 地点：window.data.maps[y][x] 的更新
                     let point = window.data.maps[y][x];
+                    this.upgradeCityLevel(point);
                     this.upgradePeople(point);
                     this.upgradeProduct(point);
                 }
+            }
+        }
+    }
+
+    /**
+     * 城市升级自检
+     * 当前城市升级策略为：纯人口叠加，未来扩展方向为 GDP
+     * @param point
+     */
+    upgradeCityLevel (point: Point) {
+        let level = 0;
+        for (let limit of window.config.citiesSize) {
+            if (point.people < limit) {
+                break;
+            }
+            level++;
+        }
+        if (point.level !== level) {
+            point.level = level;
+            if (point.node) {
+                point.node.getComponent('city').upgrade({
+                    "level": level,
+                });
             }
         }
     }
@@ -489,22 +513,6 @@ export default class Main extends cc.Component {
                 point.state.famine = 0;
             }
             point.people *= 1.001;
-        }
-
-        let level = 0;
-        for (let limit of window.config.citiesSize) {
-            if (point.people < limit) {
-                break;
-            }
-            level++;
-        }
-        if (point.level !== level) {
-            point.level = level;
-            if (point.node) {
-                point.node.getComponent('city').upgrade({
-                    "level": level
-                });
-            }
         }
     }
 }
