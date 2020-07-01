@@ -29,7 +29,7 @@ export default class City extends cc.Component {
         // }
 
         this.mapShow.spriteFrame = window.resources.terrains[data.landform];
-        this.cityShow.spriteFrame = window.resources.citys[data.level];
+        this.cityShow.spriteFrame = window.resources.cities[data.level];
         
         this.level = data.level;
         this.people = data.people;
@@ -43,7 +43,7 @@ export default class City extends cc.Component {
         }
 
         if (data.level) {
-            this.cityShow.spriteFrame = window.resources.citys[data.level];
+            this.cityShow.spriteFrame = window.resources.cities[data.level];
         }
 
         if (data.landform) {

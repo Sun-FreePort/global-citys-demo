@@ -1,6 +1,6 @@
 import url = cc.url;
-import Support from "./supports/support"
-import Perlin from "./supports/perlin"
+import Support from "./supports/support";
+import Perlin from "./supports/perlin";
 import Point from "./supports/point";
 
 const {ccclass, property} = cc._decorator;
@@ -33,7 +33,7 @@ export default class Main extends cc.Component {
     time: number = 0;
 
     show: number = 4;
-    showPoint: {x: number, y: number} = {x: 0, y: 0}
+    showPoint: {x: number, y: number} = {x: 0, y: 0};
     citiesPool: cc.NodePool = null;
 
     /**
@@ -88,7 +88,7 @@ export default class Main extends cc.Component {
             // "desert": ?,
             "hilly": 3,
             "mountain": 4,
-        }
+        };
 
         // 生成地图
         let height = Math.ceil(Math.random() * 10000);
@@ -135,7 +135,7 @@ export default class Main extends cc.Component {
             year: 30 + Math.round(Math.random() * 5),
             month: 3 + Math.round(Math.random() * 3),
             day: 1 + Math.round(Math.random() * 20),
-        }
+        };
 
         // 生成城市
         mapData[2][2].name = '青羽村';
@@ -218,7 +218,7 @@ export default class Main extends cc.Component {
 
     /**
      * TODO: 城市名生成器
-     * @param people
+     * @param level
      * @param config
      */
     cityBox (level: number, config: {sizeMax?: number, sizeMin?: number} = {}) {
@@ -249,10 +249,6 @@ export default class Main extends cc.Component {
 
     /**
      * 生成地图默认显示的节点
-     *
-     * @param show 地图上要展示的节点数量（一般为次方值）
-     * @param x
-     * @param y
      */
     generateMapShow () {
         // 重置地图节点
@@ -286,7 +282,7 @@ export default class Main extends cc.Component {
             case "1":  // Left
                 if (!window.data.maps[y] || !window.data.maps[y][x - this.show]) {
                     // TODO: 每次渲染完检查一次，灰掉相关的按钮
-                    cc.log('!')
+                    this.showError('已经到了国境线');
                     return false;
                 }
 
@@ -296,7 +292,7 @@ export default class Main extends cc.Component {
             case "2":  // Top
                 if (!window.data.maps[y + this.show] || !window.data.maps[y + this.show][x]) {
                     // TODO: 每次渲染完检查一次，灰掉相关的按钮
-                    cc.log('!')
+                    this.showError('已经到了国境线');
                     return false;
                 }
 
@@ -306,7 +302,7 @@ export default class Main extends cc.Component {
             case "3":  // Right
                 if (!window.data.maps[y] || !window.data.maps[y][x + this.show]) {
                     // TODO: 每次渲染完检查一次，灰掉相关的按钮
-                    cc.log('!')
+                    this.showError('已经到了国境线');
                     return false;
                 }
 
@@ -316,7 +312,7 @@ export default class Main extends cc.Component {
             case "4":  // Botton
                 if (!window.data.maps[y - this.show] || !window.data.maps[y - this.show][x]) {
                     // TODO: 每次渲染完检查一次，灰掉相关的按钮
-                    cc.log('!')
+                    this.showError('已经到了国境线');
                     return false;
                 }
 
@@ -354,14 +350,18 @@ export default class Main extends cc.Component {
 
                 city.setPosition(cc.v2(randX, randY));
                 city.getComponent('city').init(
-                    window.data.maps[iy + this.showPoint.y][ix + this.showPoint.x])
+                    window.data.maps[iy + this.showPoint.y][ix + this.showPoint.x]);
 
                 window.data.maps[iy + this.showPoint.y][ix + this.showPoint.x].node = city;
             }
         }
     }
 
-    showError () {
+    /**
+     * 显示错误提示
+     * @param info
+     */
+    showError (info: string) {
 
     }
 
@@ -470,9 +470,116 @@ export default class Main extends cc.Component {
      */
     upgradeProduct (point: Point) {
         // 社群能提供 43.2% 的有效生产力
-        point.goods.foodstuffs += point.people * 0.432;
-        if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
-            point.goods.foodstuffs = point.goods.foodstuffsMax;
+        let product = point.people * 0.432;
+        let natureFood = Math.random() * 3 - Math.random() * 3;
+
+        let foodWorker = 1;
+        let toolWorker = 0;
+        let luxuryWorker = 0;
+
+        switch (point.level) {
+            case 0:
+                point.goods.foodstuffs += product + natureFood;
+                if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+                    point.goods.foodstuffs = point.goods.foodstuffsMax;
+                } else if (point.goods.foodstuffsMax < 0) {
+                    point.goods.foodstuffs = 0;
+                }
+            case 1:
+                foodWorker = 0.95;
+                toolWorker = 0.05;
+
+                point.goods.foodstuffs += product * foodWorker + natureFood;
+                if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+                    point.goods.foodstuffs = point.goods.foodstuffsMax;
+                }
+
+                point.goods.tools += product * toolWorker;
+                if (point.goods.toolsMax < point.goods.tools) {
+                    point.goods.tools = point.goods.toolsMax;
+                }
+            case 2:
+                foodWorker = 0.87;
+                toolWorker = 0.13;
+
+                point.goods.foodstuffs += product * foodWorker + natureFood;
+                if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+                    point.goods.foodstuffs = point.goods.foodstuffsMax;
+                }
+
+                point.goods.tools += product * toolWorker;
+                if (point.goods.toolsMax < point.goods.tools) {
+                    point.goods.tools = point.goods.toolsMax;
+                }
+
+                point.goods.luxury += product * luxuryWorker;
+                if (point.goods.luxuryMax < point.goods.luxury) {
+                    point.goods.luxury = point.goods.luxuryMax;
+                }
+            case 3:
+                foodWorker = 0.75;
+                toolWorker = 0.24;
+                luxuryWorker = 0.01;
+
+                point.goods.foodstuffs += product * foodWorker + natureFood;
+                if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+                    point.goods.foodstuffs = point.goods.foodstuffsMax;
+                }
+
+                point.goods.tools += product * toolWorker;
+                if (point.goods.toolsMax < point.goods.tools) {
+                    point.goods.tools = point.goods.toolsMax;
+                }
+
+                point.goods.luxury += product * luxuryWorker;
+                if (point.goods.luxuryMax < point.goods.luxury) {
+                    point.goods.luxury = point.goods.luxuryMax;
+                }
+            case 4:
+                foodWorker = 0.56;
+                toolWorker = 0.4;
+                luxuryWorker = 0.04;
+
+                point.goods.foodstuffs += product * foodWorker + natureFood;
+                if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+                    point.goods.foodstuffs = point.goods.foodstuffsMax;
+                }
+
+                point.goods.tools += product * toolWorker;
+                if (point.goods.toolsMax < point.goods.tools) {
+                    point.goods.tools = point.goods.toolsMax;
+                }
+
+                point.goods.luxury += product * luxuryWorker;
+                if (point.goods.luxuryMax < point.goods.luxury) {
+                    point.goods.luxury = point.goods.luxuryMax;
+                }
+            case 5:
+                foodWorker = 0.35;
+                toolWorker = 0.55;
+                luxuryWorker = 0.1;
+
+                point.goods.foodstuffs += product * foodWorker + natureFood;
+                if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+                    point.goods.foodstuffs = point.goods.foodstuffsMax;
+                }
+
+                point.goods.tools += product * toolWorker;
+                if (point.goods.toolsMax < point.goods.tools) {
+                    point.goods.tools = point.goods.toolsMax;
+                }
+
+                point.goods.luxury += product * luxuryWorker;
+                if (point.goods.luxuryMax < point.goods.luxury) {
+                    point.goods.luxury = point.goods.luxuryMax;
+                }
+            default:
+                point.goods.foodstuffs += product + natureFood;
+                if (point.goods.foodstuffsMax < point.goods.foodstuffs) {
+                    point.goods.foodstuffs = point.goods.foodstuffsMax;
+                } else if (point.goods.foodstuffsMax < 0) {
+                    point.goods.foodstuffs = 0;
+                }
         }
     }
 
