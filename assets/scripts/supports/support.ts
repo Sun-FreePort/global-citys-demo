@@ -56,4 +56,19 @@ export default class Support {
 
         return value;
     }
+
+    public createHistoryText (text?: string, time?: string) {
+        time = time || window.data.time.year + window.data.time.month + window.data.time.day + '';
+        if (!text) {
+            const EVENT_LIST = [
+                '在本地的山谷附近，一队路过的行商听到了诡异女巫的呼嚎声。',
+                '有人在水塘深处发现了一具孩子的尸体。',
+                '有游客发现数百老鼠离奇投湖自尽，吓得他们匆匆离开。',
+                '有游客发现数百老鼠离奇投湖自尽，吓得他匆匆离开。但当地居民表示此人是卖老鼠药的。',
+            ];
+            text = '';
+        }
+
+        return `${time}，${text}。`
+    }
 }

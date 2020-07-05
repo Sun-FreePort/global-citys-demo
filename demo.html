@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo with test</title>
+</head>
+<body>
+<script>
+    let peopleEatUnit = 5;
+    let foodUseToolUnit = 1;
+    /*
+    我在写一个城市模拟器，遇到了这个问题——要不要具现化货币，货币如果出现顺差，大量的货币涌入顺差城市，剩余的城市没有货币怎么办？
+    城市没有货币，无法购买足够的农业工具，生产的粮食将变少（每人产出从供养 2 人变成供养 1.2 人），由于粮食无法满足 AB 两城的需求，粮食会在 B 城涨价，所以 B 城的货币会回流 A 城。
+有一个 BUG：在 A 城满足 B 城需求之前，B 城人就饿死了……我得考虑一下粮食储备和价格的关系了
+*/
+    let a = {
+        foodPrice: 1,
+        foodHas: 10,
+        toolsPrice: 1,
+        toolsHas: 10,
+        money: 0,
+    };
+    let b = {
+        foodPrice: 1,
+        foodHas: 10,
+        toolsPrice: 1,
+        toolsHas: 10,
+        money: 0,
+    };
+    setInterval(function () {
+        a.foodHas += peopleEatUnit * 1.2;
+        b.toolsHas += peopleEatUnit * 1.2;
+        console.info(i)
+    }, 600)
+</script>
+</body>
+</html>
