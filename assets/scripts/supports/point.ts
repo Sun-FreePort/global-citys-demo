@@ -67,7 +67,7 @@ export default class Point {
         this.goods = {
             foodstuffs: 0,
             foodstuffsMax: 50,
-            foodstuffsPrice: 1,
+            foodstuffsPrice: 3,
             tools: 0,
             toolsMax: 0,
             toolsPrice: 10,
