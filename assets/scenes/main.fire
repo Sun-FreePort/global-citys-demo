@@ -282,7 +282,7 @@
       "array": [
         0,
         0,
-        259.8076211353316,
+        256.33877382411265,
         0,
         0,
         0,
@@ -448,7 +448,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -629,7 +629,7 @@
         -0.7071067811865475,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -928,7 +928,7 @@
     "hoverSprite": null,
     "_N$disabledSprite": null,
     "_N$target": {
-      "__id__": 13
+      "__id__": 17
     },
     "_id": "36dZpvhX1GOIb/7QmnuXSI"
   },
@@ -1109,7 +1109,7 @@
     "hoverSprite": null,
     "_N$disabledSprite": null,
     "_N$target": {
-      "__id__": 13
+      "__id__": 21
     },
     "_id": "85lFRgfF5OOJp9/WV1fhVi"
   },
@@ -1181,7 +1181,18 @@
     "mapNodes": {
       "__id__": 8
     },
-    "label": null,
+    "mapArrowLeft": {
+      "__id__": 10
+    },
+    "mapArrowRight": {
+      "__id__": 22
+    },
+    "mapArrowTop": {
+      "__id__": 14
+    },
+    "mapArrowBottom": {
+      "__id__": 18
+    },
     "mapXMax": 100,
     "mapYMax": 100,
     "defaultPeople": 400,

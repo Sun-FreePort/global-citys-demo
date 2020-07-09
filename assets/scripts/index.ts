@@ -154,10 +154,10 @@ export default class Index extends cc.Component {
      */
     onClickNewGame () {
         let data = this.generateData();
-        cc.sys.localStorage.setItem("data", this.generateData());
+        cc.sys.localStorage.setItem("data", JSON.stringify(this.generateData()));
         window.data = data;
 
-        cc.director.loadScene("Main");
+        cc.director.loadScene("main");
     }
 
     /**
@@ -165,7 +165,7 @@ export default class Index extends cc.Component {
      */
     onClickContinueGame () {
         if (this.continueButtonIsOpen) {
-            cc.director.loadScene("Main");
+            cc.director.loadScene("main");
         }
     }
 
@@ -188,8 +188,10 @@ export default class Index extends cc.Component {
         };
 
         // 检查“无存档”
-        window.data = cc.sys.localStorage.getItem("data");
-        if (window.data) {
+        let data = cc.sys.localStorage.getItem("data");
+        if (data) {
+            window.data = JSON.parse(data);
+
             // 开启“继续游戏”按钮
             this.spriteContinueButton.spriteFrame = this.spriteNewButton.spriteFrame;
             this.continueButtonIsOpen = true;
