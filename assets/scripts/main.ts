@@ -85,6 +85,7 @@ export default class Main extends cc.Component {
 
         switch (arrow) {
             case "1":  // Left
+                // TODO: 按钮自动点错问题，尚未解决
                 cc.log(5)
                 cc.log(this.mapArrowRight.spriteFrame)
                 if (!window.data.maps[y] || !window.data.maps[y][x - this.show]) {
