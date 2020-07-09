@@ -64,6 +64,9 @@ export default class Point {
         this.node = data.node || null;
 
         this.history = [];
+        this.state = {
+            famine: 0,
+        };
         this.goods = {
             foodstuffs: 0,
             foodstuffsMax: 50,

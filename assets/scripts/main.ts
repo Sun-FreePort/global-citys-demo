@@ -12,9 +12,6 @@ export default class Main extends cc.Component {
     @property(cc.Node)
     mapNodes: cc.Node = null;
 
-    @property(cc.Label)
-    label: cc.Label = null;
-
     @property(cc.Sprite)
     mapArrowLeft: cc.Sprite = null;
 
@@ -81,10 +78,15 @@ export default class Main extends cc.Component {
      * @param arrow
      */
     changeMapShow (event: any, arrow: string) {
+        cc.log(arrow, typeof arrow)
+
         let x = this.showPoint.x,
           y = this.showPoint.y;
+
         switch (arrow) {
             case "1":  // Left
+                cc.log(5)
+                cc.log(this.mapArrowRight.spriteFrame)
                 if (!window.data.maps[y] || !window.data.maps[y][x - this.show]) {
                     this.mapArrowLeft.spriteFrame = null;
                     this.showError('已经到了国境线');
@@ -98,6 +100,8 @@ export default class Main extends cc.Component {
                 break;
 
             case "2":  // Top
+                cc.log(6)
+                cc.log(this.mapArrowBottom.spriteFrame)
                 if (!window.data.maps[y + this.show] || !window.data.maps[y + this.show][x]) {
                     this.mapArrowTop = null;
                     this.showError('已经到了国境线');
@@ -111,6 +115,8 @@ export default class Main extends cc.Component {
                 break;
 
             case "3":  // Right
+                cc.log(7)
+                cc.log(this.mapArrowLeft.spriteFrame)
                 if (!window.data.maps[y] || !window.data.maps[y][x + this.show]) {
                     this.mapArrowRight.spriteFrame = null;
                     this.showError('已经到了国境线');
@@ -124,6 +130,8 @@ export default class Main extends cc.Component {
                 break;
 
             case "4":  // Botton
+                cc.log(8)
+                cc.log(this.mapArrowTop.spriteFrame)
                 if (!window.data.maps[y - this.show] || !window.data.maps[y - this.show][x]) {
                     this.mapArrowBottom = null;
                     this.showError('已经到了国境线');
@@ -191,6 +199,10 @@ export default class Main extends cc.Component {
     // onLoad () {}
 
     start () {
+        if (!window.data) {
+            return cc.director.loadScene("index");
+        }
+
         // 初始化地图节点
         this.generateMapShow();
     }
@@ -271,7 +283,6 @@ export default class Main extends cc.Component {
         if (window.data.time.day > 30) {
             window.data.time.day = 1;
             window.data.time.month++;
-
 
             if (window.data.time.month > 12) {
                 window.data.time.month = 1;
@@ -391,5 +402,15 @@ export default class Main extends cc.Component {
             }
             point.people *= 1.001;
         }
+    }
+
+    /**
+     * 手动保存存档
+     */
+    onClickSave () {
+    }
+
+    gameSave () {
+        cc.sys.localStorage.setItem("data", JSON.stringify(window.data));
     }
 }
