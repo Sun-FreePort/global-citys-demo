@@ -223,6 +223,7 @@ export default class Main extends cc.Component {
                     this.upgradeCityLevel(point);
                     this.upgradePeople(point);
                     this.upgradeProduct(point);
+                    this.upgradePrice(point);
                     this.upgradeRandom(point);
                 }
             }
@@ -405,11 +406,70 @@ export default class Main extends cc.Component {
     }
 
     /**
-     * 手动保存存档
+     * 物价增加
+     * @param point
+     */
+    upgradePrice (point: Point) {
+        const SAVE_RATE = {
+            foodstuffs: [{ // 粮食
+                rate: 0.9,
+                change: -0.19,
+            }, {
+                rate: 0.8,
+                change: -0.1,
+            }, {
+                rate: 0.25,
+                change: 0.1,
+            }, {
+                rate: 0.1,
+                change: 0.22,
+            }],
+            tools: [{ // 工具
+                rate: 0.9,
+                change: -0.41,
+            }, {
+                rate: 0.75,
+                change: -0.18,
+            }, {
+                rate: 0.25,
+                change: 0.18,
+            }, {
+                rate: 0.1,
+                change: 0.55,
+            }],
+            luxury: [{ // 奢侈品
+                rate: 0.9,
+                change: -5,
+            }, {
+                rate: 0.75,
+                change: 1,
+            }, {
+                rate: 0.25,
+                change: 1,
+            }, {
+                rate: 0.1,
+                change: 4.5,
+            }],
+        };
+        for (let key in SAVE_RATE) {
+            for (let json of SAVE_RATE[key]) {
+                if (point.goods[key] > point.goods[key + 'Max'] * json.rate) {
+                    point.goods[key + 'Price'] += json.change;
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 手动存档
      */
     onClickSave () {
     }
 
+    /**
+     * 存档
+     */
     gameSave () {
         cc.sys.localStorage.setItem("data", JSON.stringify(window.data));
     }
