@@ -352,6 +352,10 @@ export default class Main extends cc.Component {
         } else if (point.goods.foodstuffsMax < 0) {
             point.goods.foodstuffs = 0;
         }
+        // TODO: 粮食过期
+        if (point.goods.foodstuffs > 0) {
+            point.goods.foodstuffs *= 0.9;
+        }
 
         point.goods.tools += product * toolWorker;
         if (point.goods.toolsMax < point.goods.tools) {
