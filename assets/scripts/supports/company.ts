@@ -1,17 +1,11 @@
 export default class Company {
-    // 自然
-    x: number;
-    y: number;
-    height: number;
-    landforms: number;
+    // 公司
     name: string;
-    // 城市
-    people: number;
-    level: number;
+    goodwill: number;
+    money: number;
     state: {
         famine: number;  // 饥荒
     };
-    money: number;
     goods: {
         foodstuffs: number,
         foodstuffsMax: number,
@@ -20,7 +14,7 @@ export default class Company {
         tools: number,
         toolsMax: number,
         toolsPrice: number,
-
+    
         luxury: number,
         luxuryMax: number,
         luxuryPrice: number,
@@ -30,12 +24,8 @@ export default class Company {
     node?: cc.Node;  // 城市节点
 
     constructor (data: {
-        x: number;
-        y: number;
-        height: number,
-        landforms: number,
         name: string,
-        people?: number,
+        goodwill: number,
         money?: number,
         level?: number,  // 城市等级
         node?: cc.Node,  // 城市节点
@@ -51,14 +41,8 @@ export default class Company {
             luxuryPrice?: number,
         };
     }) {
-        this.x = data.x;
-        this.y = data.y;
-        this.height = data.height;
-        this.landforms = data.landforms;
-
         this.name = data.name;
-        this.people = data.people || 0;
-        this.level = data.level || 0;
+        this.goodwill = data.goodwill || 0;
         this.money = data.money || Math.random() * 100;
 
         this.node = data.node || null;

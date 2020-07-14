@@ -245,6 +245,12 @@ export default class Main extends cc.Component {
             level++;
         }
         if (point.level !== level) {
+            if (point.level > level) {
+                // TODO: loss
+            } else {
+                // TODO: up
+            }
+
             point.level = level;
             if (point.node) {
                 point.node.getComponent('city').upgrade({
@@ -259,7 +265,7 @@ export default class Main extends cc.Component {
      */
     upgradeRandom (point) {
         // 金币增加 x
-        if (point.level > 1 && Math.random() < 0.01) {
+        if (point.level > 1 && Math.random() < 0.005) {
             let newMoney = Math.random() * 300;
             point.money += newMoney;
 
@@ -268,7 +274,7 @@ export default class Main extends cc.Component {
         }
 
         // 金币损耗 x%
-        if (point.level > 1 && Math.random() < 0.01) {
+        if (point.level > 1 && Math.random() < 0.005) {
             let rebirth = point.money * (0.9 + Math.random() / 10);
             let destroyMoney = rebirth * point.money;
             point.money -= destroyMoney;

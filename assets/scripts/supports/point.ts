@@ -16,14 +16,17 @@ export default class Point {
         foodstuffs: number,
         foodstuffsMax: number,
         foodstuffsPrice: number,
+        foodstuffsList: Array<{belong: number, number: number, timestamp: number}>
 
         tools: number,
         toolsMax: number,
         toolsPrice: number,
+        toolsList: Array<{belong: number, number: number, timestamp: number}>
 
         luxury: number,
         luxuryMax: number,
         luxuryPrice: number,
+        luxuryList: Array<{belong: number, number: number, timestamp: number}>
     };
     history: Array<string>;
 
@@ -71,12 +74,15 @@ export default class Point {
             foodstuffs: 0,
             foodstuffsMax: 50,
             foodstuffsPrice: 3,
+            foodstuffsList: [],
             tools: 0,
             toolsMax: 0,
             toolsPrice: 10,
+            toolsList: [],
             luxury: 0,
             luxuryMax: 0,
             luxuryPrice: 100,
+            luxuryList: [],
         };
         if (data.goods) {
             this.goods.foodstuffs = data.goods.foodstuffs || 0;
