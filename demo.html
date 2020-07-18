@@ -5,6 +5,8 @@
     <title>Demo with test</title>
 </head>
 <body>
+<input type="text">
+
 <script>
     let peopleEatUnit = 5;
     let foodUseToolUnit = 1;
@@ -28,10 +30,20 @@
         money: 0,
     };
     setInterval(function () {
-        a.foodHas += peopleEatUnit * 1.2;
-        b.toolsHas += peopleEatUnit * 1.2;
-        console.info(i)
-    }, 600)
+        for (let i = 0; i < 9999; i++) {
+            if (a.foodHas) {
+                a.foodPrice++;
+            }
+            if (b.foodHas) {
+                b.foodPrice++;
+            }
+        }
+        if (a.foodPrice > 1000000) {
+            a.foodPrice = 0;
+            b.foodPrice = 0;
+        }
+        console.info(a.foodPrice)
+    }, 1000)
 </script>
 </body>
 </html>

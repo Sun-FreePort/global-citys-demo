@@ -1,33 +1,28 @@
-export default class Point {
+import Base from "./base";
+
+/**
+ * 地点类
+ * 货物为本地上架货物
+ */
+export default class Point extends Base {
     // 自然
     x: number;
     y: number;
     height: number;
     landforms: number;
+    farmland: number; // 农田（每月产出上限）
+    coalMine: number; // 煤矿（每月产出上限）
+    ironMine: number; // 铁矿（每月产出上限）
+    copperMine: number; // 铜矿（每月产出上限）
     name: string;
     // 城市
     people: number;
     level: number;
+    marketShelf: number; // 本地货架（摆放上限）
     state: {
-        famine: number;  // 饥荒
+        famine: number,  // 饥荒
     };
     money: number;
-    goods: {
-        foodstuffs: number,
-        foodstuffsMax: number,
-        foodstuffsPrice: number,
-        foodstuffsList: Array<{belong: number, number: number, timestamp: number}>
-
-        tools: number,
-        toolsMax: number,
-        toolsPrice: number,
-        toolsList: Array<{belong: number, number: number, timestamp: number}>
-
-        luxury: number,
-        luxuryMax: number,
-        luxuryPrice: number,
-        luxuryList: Array<{belong: number, number: number, timestamp: number}>
-    };
     history: Array<string>;
 
     node?: cc.Node;  // 城市节点
@@ -37,60 +32,56 @@ export default class Point {
         y: number;
         height: number,
         landforms: number,
-        name: string,
         people?: number,
-        money?: number,
         level?: number,  // 城市等级
         node?: cc.Node,  // 城市节点
+        name: string,
+        money?: number,
         goods?: {
             foodstuffs?: number,
             foodstuffsMax?: number,
             foodstuffsPrice?: number,
-            tools?: number,
-            toolsMax?: number,
-            toolsPrice?: number,
-            luxury?: number,
-            luxuryMax?: number,
-            luxuryPrice?: number,
+            coalOre?: number,
+            coalOreMax?: number,
+            coalOrePrice?: number,
+            ironOre?: number,
+            ironOreMax?: number,
+            ironOrePrice?: number,
+            copperOre?: number,
+            copperOreMax?: number,
+            copperOrePrice?: number,
+            ironIngot?: number,
+            ironIngotMax?: number,
+            ironIngotPrice?: number,
+            copperIngot?: number,
+            copperIngotMax?: number,
+            copperIngotPrice?: number,
+            farmTool?: number,
+            farmToolMax?: number,
+            farmToolPrice?: number,
+            brewery?: number,
+            breweryMax?: number,
+            breweryPrice?: number,
+            tobacco?: number,
+            tobaccoMax?: number,
+            tobaccoPrice?: number,
+            watchmaker?: number,
+            watchmakerMax?: number,
+            watchmakerPrice?: number,
         };
     }) {
+        super(data);
+        this.node = data.node || null;
+
         this.x = data.x;
         this.y = data.y;
         this.height = data.height;
         this.landforms = data.landforms;
-
-        this.name = data.name;
         this.people = data.people || 0;
         this.level = data.level || 0;
-        this.money = data.money || Math.random() * 100;
-
-        this.node = data.node || null;
-
         this.history = [];
         this.state = {
             famine: 0,
         };
-        this.goods = {
-            foodstuffs: 0,
-            foodstuffsMax: 50,
-            foodstuffsPrice: 3,
-            foodstuffsList: [],
-            tools: 0,
-            toolsMax: 0,
-            toolsPrice: 10,
-            toolsList: [],
-            luxury: 0,
-            luxuryMax: 0,
-            luxuryPrice: 100,
-            luxuryList: [],
-        };
-        if (data.goods) {
-            this.goods.foodstuffs = data.goods.foodstuffs || 0;
-            this.goods.foodstuffsMax = data.goods.foodstuffsMax || 50;
-            this.goods.foodstuffs = data.goods.tools || 0;
-            this.goods.foodstuffsMax = data.goods.toolsMax || 0;
-            this.goods.luxury = data.goods.luxury || 0;
-            this.goods.luxuryMax = data.goods.luxuryMax || 0;
-        }
     }
 }

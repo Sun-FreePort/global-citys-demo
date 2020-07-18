@@ -6,10 +6,7 @@ Background music form : [Bensound](https://www.bensound.com).
 
 city-change 更新内容：
 
-~~聚落人口过少会消失。~~
-聚落会生产消耗奢侈品。
-滞销会导致产量下滑事件；短缺会导致产量上升事件。
-产量有最大值。
+地貌决定本地的资源、产量上限、库存上限
 
 每个 Point 类，有“食物总量”变量，有“食物批次记录”数组。
 每个 Company 类，。
