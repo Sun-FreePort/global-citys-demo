@@ -16,7 +16,11 @@ export default class Point extends Base {
     copperMine: number; // 铜矿（每月产出上限）
     name: string;
     // 城市
-    people: number;
+    people: {
+        worker: number,
+        manager: number,
+        leader: number,
+    };
     level: number;
     marketShelf: number; // 本地货架（摆放上限）
     state: {
@@ -32,7 +36,11 @@ export default class Point extends Base {
         y: number;
         height: number,
         landforms: number,
-        people?: number,
+        people: {
+            worker: number,
+            manager: number,
+            leader: number,
+        },
         level?: number,  // 城市等级
         node?: cc.Node,  // 城市节点
         marketShelf?: number,
@@ -91,11 +99,53 @@ export default class Point extends Base {
         this.y = data.y;
         this.height = data.height;
         this.landforms = data.landforms;
-        this.people = data.people || 0;
+        this.people = window.support.deepClone(data.people);
         this.level = data.level || 0;
         this.history = [];
         this.state = {
             famine: 0,
         };
+    }
+
+    /**
+     * 人口更新
+     */
+    public upgradePeople () {
+        if ((this.people.worker + this.people.manager + this.people.leader) < 1) {
+            return false;
+        }
+        this.goods.foodstuffs -= this.people * 0.40;
+        if (this.goods.foodstuffs < 0) {
+            this.goods.foodstuffs = 0;
+
+            switch (Math.floor(this.state.famine)) {
+                case 0:
+                    this.state.famine += 0.2;
+                    break;
+                case 1:
+                    if (this.state.famine === 1) {
+                        this.history.push(window.support.createHistoryText('粮食不足的征兆出现了，这是大饥荒的开始，还是命运的恶作剧？'));
+                    }
+                    this.state.famine += 0.1;
+                    // TODO: 人口衰减，考虑是否通过总人口的方式做计算
+                    this.people *= 0.99;
+                    break;
+                case 2:
+                    this.state.famine += 0.1;
+                    this.people *= 0.98;
+                    break;
+                case 3:
+                default:
+                    this.state.famine += 0.1;
+                    this.people *= 0.96;
+                    break;
+            }
+            this.people *= 0.99;
+        } else {
+            if (this.state.famine >= 0.1) {
+                this.state.famine -= 0.1;
+            }
+            this.people *= 1.001;
+        }
     }
 }

@@ -222,7 +222,7 @@ export default class Main extends cc.Component {
                     // 地点：window.data.maps[y][x] 的更新
                     let point = window.data.maps[y][x];
                     this.upgradeCityLevel(point);
-                    this.upgradePeople(point);
+                    point.upgradePeople();
                     this.upgradeProduct(point);
                     this.upgradePrice(point);
                     this.upgradeRandom(point);
@@ -362,48 +362,6 @@ export default class Main extends cc.Component {
         point.goods.farmTool += product * toolWorker;
         if (point.goods.farmToolMax < point.goods.farmTool) {
             point.goods.farmTool = point.goods.farmToolMax;
-        }
-    }
-
-    /**
-     * 人口更新
-     * @param point
-     */
-    upgradePeople (point: Point) {
-        if (point.people < 1) {
-            return false;
-        }
-        point.goods.foodstuffs -= point.people * 0.40;
-        if (point.goods.foodstuffs < 0) {
-            point.goods.foodstuffs = 0;
-
-            switch (Math.floor(point.state.famine)) {
-                case 0:
-                    point.state.famine += 0.2;
-                    break;
-                case 1:
-                    if (point.state.famine === 1) {
-                        point.history.push(window.support.createHistoryText('粮食不足的征兆出现了，这是大饥荒的开始，还是命运的恶作剧？'));
-                    }
-                    point.state.famine += 0.1;
-                    point.people *= 0.99;
-                    break;
-                case 2:
-                    point.state.famine += 0.1;
-                    point.people *= 0.98;
-                    break;
-                case 3:
-                    point.state.famine += 0.1;
-                    point.people *= 0.96;
-                    break;
-            }
-            point.people *= 0.99;
-        } else {
-            point.state.famine -= 0.1;
-            if (point.state.famine < 0) {
-                point.state.famine = 0;
-            }
-            point.people *= 1.001;
         }
     }
 
