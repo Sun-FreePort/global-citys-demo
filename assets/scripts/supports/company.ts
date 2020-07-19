@@ -7,7 +7,8 @@ import Base from "./base";
 export default class Company extends Base {
     // 公司
     goodwill: number;
-    standardProduct: number;  // 标准产量，用于和人力、效率等因素折算
+    standardProduct: number; // 标准产量，用于和人力、效率等因素折算
+    // TODO:
 
     constructor (data: {
         name: string,

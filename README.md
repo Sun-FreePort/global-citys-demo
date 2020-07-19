@@ -6,7 +6,7 @@ Background music form : [Bensound](https://www.bensound.com).
 
 city-change 更新内容：
 
-地貌决定本地的资源、产量上限、库存上限
+城市有三阶层居民、政府和一家粮食公司
 
 每个 Point 类，有“食物总量”变量，有“食物批次记录”数组。
 每个 Company 类，。

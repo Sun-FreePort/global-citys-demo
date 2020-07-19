@@ -75,12 +75,27 @@ export default class Index extends cc.Component {
      */
     generateData () {
         const TERRAIN = {
-            "sea": 0,
-            "marsh": 1,
-            "plane": 2,
+            "sea": {
+                "landforms": 0,
+                "farmland": 1700,
+            },
+            "marsh": {
+                "landforms": 1,
+                "farmland": 1900,
+            },
+            "plane": {
+                "landforms": 2,
+                "farmland": 4200,
+            },
             // "desert": ?,
-            "hilly": 3,
-            "mountain": 4,
+            "hilly": {
+                "landforms": 3,
+                "farmland": 2700,
+            },
+            "mountain": {
+                "landforms": 4,
+                "farmland": 1750,
+            },
         };
 
         // 生成地图
@@ -100,27 +115,43 @@ export default class Index extends cc.Component {
                 let step = 53;
                 let landforms = null;
                 if (value < 60) {
-                    landforms = TERRAIN.sea;
+                    landforms = JSON.parse(JSON.stringify(TERRAIN.sea));
+                    landforms.farmland *= 0.75 + Math.random();
+                    // TODO: 海洋矿物如何开采
                 } else if (value < 60 + step) {
-                    landforms = TERRAIN.marsh;
+                    landforms = JSON.parse(JSON.stringify(TERRAIN.marsh));
+                    landforms.farmland *= 0.75 + Math.random();
+                    landforms.coalMine = (Math.random() < 0.22) ? 9500 * Math.random() : 0;
+                    landforms.ironMine = (Math.random() < 0.05) ? 3200 * Math.random() : 0;
+                    landforms.copperMine = (Math.random() < 0.09) ? 2400 * Math.random() : 0;
                 } else if (value < 60 + step * 2) {
-                    landforms = TERRAIN.plane;
+                    landforms = JSON.parse(JSON.stringify(TERRAIN.plane));
+                    landforms.farmland *= 0.8 + Math.random();
+                    landforms.coalMine = (Math.random() < 0.26) ? 12000 * Math.random() : 0;
+                    landforms.ironMine = (Math.random() < 0.09) ? 4900 * Math.random() : 0;
+                    landforms.copperMine = (Math.random() < 0.11) ? 3200 * Math.random() : 0;
                 } else if (value < 60 + step * 3) {
-                    landforms = TERRAIN.hilly;
+                    landforms = JSON.parse(JSON.stringify(TERRAIN.hilly));
+                    landforms.farmland *= 0.6 + Math.random();
+                    landforms.coalMine = (Math.random() < 0.09) ? 8800 * Math.random() : 0;
+                    landforms.ironMine = (Math.random() < 0.12) ? 5750 * Math.random() : 0;
+                    landforms.copperMine = (Math.random() < 0.24) ? 7200 * Math.random() : 0;
                 } else {
-                    landforms = TERRAIN.mountain;
+                    landforms = JSON.parse(JSON.stringify(TERRAIN.mountain));
+                    landforms.farmland *= 0.5 + Math.random();
+                    landforms.coalMine = (Math.random() < 0.06) ? 7200 * Math.random() : 0;
+                    landforms.ironMine = (Math.random() < 0.21) ? 9500 * Math.random() : 0;
+                    landforms.copperMine = (Math.random() < 0.10) ? 4200 * Math.random() : 0;
                 }
 
-                mapData[mapY][mapX] = new Point({
+                mapData[mapY][mapX] = new Point(Object.assign({
                     "x": mapX,
                     "y": mapY,
                     "height": value,
-                    "landforms": landforms,
                     "name": this.placeBox(landforms),
-                })
+                }, landforms))
             }
         }
-
         // 生成时间
         let time = {
             year: 30 + Math.round(Math.random() * 5),

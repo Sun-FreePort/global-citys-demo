@@ -35,6 +35,12 @@ export default class Point extends Base {
         people?: number,
         level?: number,  // 城市等级
         node?: cc.Node,  // 城市节点
+        marketShelf?: number,
+        farmland?: number; // 农田（每月产出上限）
+        coalMine?: number; // 煤矿（每月产出上限）
+        ironMine?: number; // 铁矿（每月产出上限）
+        copperMine?: number; // 铜矿（每月产出上限）
+
         name: string,
         money?: number,
         goods?: {
@@ -73,6 +79,14 @@ export default class Point extends Base {
         super(data);
         this.node = data.node || null;
 
+        this.farmland = data.farmland || 600; // 农田（每月产出上限）
+        this.coalMine = data.coalMine || 0; // 煤矿（每月产出上限）
+        this.ironMine = data.ironMine || 0; // 铁矿（每月产出上限）
+        this.copperMine = data.copperMine || 0; // 铜矿（每月产出上限）
+
+        this.marketShelf = data.marketShelf || 1000;
+
+        this.marketShelf = data.marketShelf || 1000;
         this.x = data.x;
         this.y = data.y;
         this.height = data.height;
