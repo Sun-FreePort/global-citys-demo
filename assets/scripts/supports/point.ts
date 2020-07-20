@@ -127,25 +127,31 @@ export default class Point extends Base {
                         this.history.push(window.support.createHistoryText('粮食不足的征兆出现了，这是大饥荒的开始，还是命运的恶作剧？'));
                     }
                     this.state.famine += 0.1;
-                    // TODO: 人口衰减，考虑是否通过总人口的方式做计算
-                    this.people *= 0.99;
+                    this.people.worker *= 0.996;
+                    this.people.manager *= 0.997;
+                    this.people.leader *= 0.998;
                     break;
                 case 2:
                     this.state.famine += 0.1;
-                    this.people *= 0.98;
+                    this.people.worker *= 0.988;
+                    this.people.manager *= 0.99;
+                    this.people.leader *= 0.992;
                     break;
                 case 3:
                 default:
                     this.state.famine += 0.1;
-                    this.people *= 0.96;
+                    this.people.worker *= 0.96;
+                    this.people.manager *= 0.965;
+                    this.people.leader *= 0.97;
                     break;
             }
-            this.people *= 0.99;
         } else {
             if (this.state.famine >= 0.1) {
                 this.state.famine -= 0.1;
             }
-            this.people *= 1.001;
+            this.people.worker *= 1.0015;
+            this.people.manager *= 1.0013;
+            this.people.leader *= 1.001;
         }
     }
 }
