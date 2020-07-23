@@ -7,12 +7,25 @@ import Base from "./base";
 export default class Company extends Base {
     // 公司
     goodwill: number;
-    standardProduct: number; // 标准产量，用于和人力、效率等因素折算
-    // TODO:
+    cost: {
+        waste: number, // 浪费成本
+        deposit: number, // 库存成本，上架成本不计入
+    };
+    product: number; // 标准产量，用于和人力、效率等因素折算
+    employee: {
+        worker: number,
+        manager: number,
+        leader: number,
+    };
 
     constructor (data: {
         name: string,
         goodwill: number,
+        employee: {
+            worker: number,
+            manager: number,
+            leader: number,
+        },
         money?: number,
         goods?: {
             foodstuffs?: number,
@@ -50,5 +63,10 @@ export default class Company extends Base {
         super(data);
 
         this.goodwill = data.goodwill || 0;
+        this.employee = {
+            worker: data.employee.worker,
+            manager: data.employee.manager,
+            leader: data.employee.leader,
+        };
     }
 }

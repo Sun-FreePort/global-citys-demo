@@ -26,7 +26,6 @@ export default class Point extends Base {
     state: {
         famine: number,  // 饥荒
     };
-    money: number;
     history: Array<string>;
 
     node?: cc.Node;  // 城市节点
