@@ -153,6 +153,9 @@ export default class Index extends cc.Component {
                         "worker": 0,
                         "manager": 0,
                         "leader": 0,
+                        "workerMoney": 0,
+                        "managerMoney": 0,
+                        "leaderMoney": 0,
                     },
                 }, landforms))
             }

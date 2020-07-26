@@ -1,4 +1,5 @@
 import Base from "./base";
+import Company from "./company";
 
 /**
  * 地点类
@@ -16,11 +17,6 @@ export default class Point extends Base {
     copperMine: number; // 铜矿（每月产出上限）
     name: string;
     // 城市
-    people: {
-        worker: number,
-        manager: number,
-        leader: number,
-    };
     level: number;
     marketShelf: number; // 本地货架（摆放上限）
     state: {
@@ -28,7 +24,16 @@ export default class Point extends Base {
     };
     history: Array<string>;
 
-    node?: cc.Node;  // 城市节点
+    node?: cc.Node;  // 城市的游戏节点
+    company: Array<Company>;  // 本地企业
+    people: {
+        worker: number,
+        workerMoney: number,
+        manager: number,
+        managerMoney: number,
+        leader: number,
+        leaderMoney: number,
+    };
 
     constructor (data: {
         x: number;
@@ -37,8 +42,11 @@ export default class Point extends Base {
         landforms: number,
         people: {
             worker: number,
+            workerMoney: number,
             manager: number,
+            managerMoney: number,
             leader: number,
+            leaderMoney: number,
         },
         level?: number,  // 城市等级
         node?: cc.Node,  // 城市节点
@@ -105,6 +113,14 @@ export default class Point extends Base {
             famine: 0,
         };
     }
+
+    /**
+     * 本地政府行动
+     */
+
+    /**
+     * 本地企业行动
+     */
 
     /**
      * 人口更新
