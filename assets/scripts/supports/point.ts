@@ -1,90 +1,172 @@
-export default class Point {
+import Base from "./base";
+import Company from "./company";
+
+/**
+ * 地点类
+ * 货物为本地上架货物
+ */
+export default class Point extends Base {
     // 自然
     x: number;
     y: number;
     height: number;
     landforms: number;
+    farmland: number; // 农田（每月产出上限）
+    coalMine: number; // 煤矿（每月产出上限）
+    ironMine: number; // 铁矿（每月产出上限）
+    copperMine: number; // 铜矿（每月产出上限）
     name: string;
     // 城市
-    people: number;
     level: number;
+    marketShelf: number; // 本地货架（摆放上限）
     state: {
-        famine: number;  // 饥荒
-    };
-    money: number;
-    goods: {
-        foodstuffs: number,
-        foodstuffsMax: number,
-        foodstuffsPrice: number,
-
-        tools: number,
-        toolsMax: number,
-        toolsPrice: number,
-
-        luxury: number,
-        luxuryMax: number,
-        luxuryPrice: number,
+        famine: number,  // 饥荒
     };
     history: Array<string>;
 
-    node?: cc.Node;  // 城市节点
+    node?: cc.Node;  // 城市的游戏节点
+    company: Array<Company>;  // 本地企业
+    people: {
+        worker: number,
+        workerMoney: number,
+        manager: number,
+        managerMoney: number,
+        leader: number,
+        leaderMoney: number,
+    };
 
     constructor (data: {
         x: number;
         y: number;
         height: number,
         landforms: number,
-        name: string,
-        people?: number,
-        money?: number,
+        people: {
+            worker: number,
+            workerMoney: number,
+            manager: number,
+            managerMoney: number,
+            leader: number,
+            leaderMoney: number,
+        },
         level?: number,  // 城市等级
         node?: cc.Node,  // 城市节点
+        marketShelf?: number,
+        farmland?: number; // 农田（每月产出上限）
+        coalMine?: number; // 煤矿（每月产出上限）
+        ironMine?: number; // 铁矿（每月产出上限）
+        copperMine?: number; // 铜矿（每月产出上限）
+
+        name: string,
+        money?: number,
         goods?: {
             foodstuffs?: number,
             foodstuffsMax?: number,
             foodstuffsPrice?: number,
-            tools?: number,
-            toolsMax?: number,
-            toolsPrice?: number,
-            luxury?: number,
-            luxuryMax?: number,
-            luxuryPrice?: number,
+            coalOre?: number,
+            coalOreMax?: number,
+            coalOrePrice?: number,
+            ironOre?: number,
+            ironOreMax?: number,
+            ironOrePrice?: number,
+            copperOre?: number,
+            copperOreMax?: number,
+            copperOrePrice?: number,
+            ironIngot?: number,
+            ironIngotMax?: number,
+            ironIngotPrice?: number,
+            copperIngot?: number,
+            copperIngotMax?: number,
+            copperIngotPrice?: number,
+            farmTool?: number,
+            farmToolMax?: number,
+            farmToolPrice?: number,
+            brewery?: number,
+            breweryMax?: number,
+            breweryPrice?: number,
+            tobacco?: number,
+            tobaccoMax?: number,
+            tobaccoPrice?: number,
+            watchmaker?: number,
+            watchmakerMax?: number,
+            watchmakerPrice?: number,
         };
     }) {
+        super(data);
+        this.node = data.node || null;
+
+        this.farmland = data.farmland || 600; // 农田（每月产出上限）
+        this.coalMine = data.coalMine || 0; // 煤矿（每月产出上限）
+        this.ironMine = data.ironMine || 0; // 铁矿（每月产出上限）
+        this.copperMine = data.copperMine || 0; // 铜矿（每月产出上限）
+
+        this.marketShelf = data.marketShelf || 1000;
+
+        this.marketShelf = data.marketShelf || 1000;
         this.x = data.x;
         this.y = data.y;
         this.height = data.height;
         this.landforms = data.landforms;
-
-        this.name = data.name;
-        this.people = data.people || 0;
+        this.people = window.support.deepClone(data.people);
         this.level = data.level || 0;
-        this.money = data.money || Math.random() * 100;
-
-        this.node = data.node || null;
-
         this.history = [];
         this.state = {
             famine: 0,
         };
-        this.goods = {
-            foodstuffs: 0,
-            foodstuffsMax: 50,
-            foodstuffsPrice: 3,
-            tools: 0,
-            toolsMax: 0,
-            toolsPrice: 10,
-            luxury: 0,
-            luxuryMax: 0,
-            luxuryPrice: 100,
-        };
-        if (data.goods) {
-            this.goods.foodstuffs = data.goods.foodstuffs || 0;
-            this.goods.foodstuffsMax = data.goods.foodstuffsMax || 50;
-            this.goods.foodstuffs = data.goods.tools || 0;
-            this.goods.foodstuffsMax = data.goods.toolsMax || 0;
-            this.goods.luxury = data.goods.luxury || 0;
-            this.goods.luxuryMax = data.goods.luxuryMax || 0;
+    }
+
+    /**
+     * 本地政府行动
+     */
+
+    /**
+     * 本地企业行动
+     */
+
+    /**
+     * 人口更新
+     */
+    public upgradePeople () {
+        if ((this.people.worker + this.people.manager + this.people.leader) < 1) {
+            return false;
+        }
+        this.goods.foodstuffs -= this.people * 0.40;
+        if (this.goods.foodstuffs < 0) {
+            this.goods.foodstuffs = 0;
+
+            switch (Math.floor(this.state.famine)) {
+                case 0:
+                    this.state.famine += 0.2;
+                    break;
+                case 1:
+                    if (this.state.famine === 1) {
+                        this.history.push(window.support.createHistoryText('粮食不足的征兆出现了，这是大饥荒的开始，还是命运的恶作剧？'));
+                    }
+                    this.state.famine += 0.1;
+                    this.people.worker *= 0.996;
+                    this.people.manager *= 0.997;
+                    this.people.leader *= 0.998;
+                    break;
+                case 2:
+                    this.state.famine += 0.1;
+                    this.people.worker *= 0.988;
+                    this.people.manager *= 0.99;
+                    this.people.leader *= 0.992;
+                    break;
+                case 3:
+                default:
+                    this.state.famine += 0.1;
+                    this.people.worker *= 0.96;
+                    this.people.manager *= 0.965;
+                    this.people.leader *= 0.97;
+                    break;
+            }
+        } else {
+            if (this.state.famine >= 0.1) {
+                this.state.famine -= 0.1;
+            }
+            this.people.worker *= 1.0015;
+            this.people.manager *= 1.0013;
+            this.people.leader *= 1.001;
         }
     }
 }

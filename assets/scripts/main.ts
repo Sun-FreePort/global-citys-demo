@@ -222,7 +222,7 @@ export default class Main extends cc.Component {
                     // 地点：window.data.maps[y][x] 的更新
                     let point = window.data.maps[y][x];
                     this.upgradeCityLevel(point);
-                    this.upgradePeople(point);
+                    point.upgradePeople();
                     this.upgradeProduct(point);
                     this.upgradePrice(point);
                     this.upgradeRandom(point);
@@ -245,6 +245,12 @@ export default class Main extends cc.Component {
             level++;
         }
         if (point.level !== level) {
+            if (point.level > level) {
+                // TODO: loss
+            } else {
+                // TODO: up
+            }
+
             point.level = level;
             if (point.node) {
                 point.node.getComponent('city').upgrade({
@@ -259,7 +265,7 @@ export default class Main extends cc.Component {
      */
     upgradeRandom (point) {
         // 金币增加 x
-        if (point.level > 1 && Math.random() < 0.01) {
+        if (point.level > 1 && Math.random() < 0.005) {
             let newMoney = Math.random() * 300;
             point.money += newMoney;
 
@@ -268,7 +274,7 @@ export default class Main extends cc.Component {
         }
 
         // 金币损耗 x%
-        if (point.level > 1 && Math.random() < 0.01) {
+        if (point.level > 1 && Math.random() < 0.005) {
             let rebirth = point.money * (0.9 + Math.random() / 10);
             let destroyMoney = rebirth * point.money;
             point.money -= destroyMoney;
@@ -303,7 +309,6 @@ export default class Main extends cc.Component {
 
         let foodWorker = 1;
         let toolWorker = 0;
-        let luxuryWorker = 0;
 
         switch (point.level) {
             case 1:
@@ -317,32 +322,29 @@ export default class Main extends cc.Component {
             case 3:
                 foodWorker = 0.75;
                 toolWorker = 0.24;
-                luxuryWorker = 0.01;
                 break;
             case 4:
                 foodWorker = 0.56;
                 toolWorker = 0.4;
-                luxuryWorker = 0.04;
                 break;
             case 5:
                 foodWorker = 0.35;
                 toolWorker = 0.55;
-                luxuryWorker = 0.1;
                 break;
             default:
         }
         // 计算工具的效率提升和磨损
         let farmTools = 1;
-        if (point.goods.tools > 1) {
-            if (point.goods.tools > product * 0.3) {
-                point.goods.tools -= product * 0.3;
+        if (point.goods.farmTool > 1) {
+            if (point.goods.farmTool > product * 0.3) {
+                point.goods.farmTool -= product * 0.3;
                 farmTools = 1.5
-            } else if (point.goods.tools > product * 0.15) {
-                point.goods.tools -= product * 0.15;
+            } else if (point.goods.farmTool > product * 0.15) {
+                point.goods.farmTool -= product * 0.15;
                 farmTools = 1.2
             } else {
-                point.goods.tools = 0;
-                farmTools += 0.2 * point.goods.tools / (product * 0.15);
+                point.goods.farmTool = 0;
+                farmTools += 0.2 * point.goods.farmTool / (product * 0.15);
             }
         }
         // 具体生产
@@ -352,57 +354,14 @@ export default class Main extends cc.Component {
         } else if (point.goods.foodstuffsMax < 0) {
             point.goods.foodstuffs = 0;
         }
-
-        point.goods.tools += product * toolWorker;
-        if (point.goods.toolsMax < point.goods.tools) {
-            point.goods.tools = point.goods.toolsMax;
+        // TODO: 粮食过期
+        if (point.goods.foodstuffs > 0) {
+            point.goods.foodstuffs *= 0.9;
         }
 
-        point.goods.luxury += product * luxuryWorker;
-        if (point.goods.luxuryMax < point.goods.luxury) {
-            point.goods.luxury = point.goods.luxuryMax;
-        }
-    }
-
-    /**
-     * 人口更新
-     * @param point
-     */
-    upgradePeople (point: Point) {
-        if (point.people < 1) {
-            return false;
-        }
-        point.goods.foodstuffs -= point.people * 0.40;
-        if (point.goods.foodstuffs < 0) {
-            point.goods.foodstuffs = 0;
-
-            switch (Math.floor(point.state.famine)) {
-                case 0:
-                    point.state.famine += 0.2;
-                    break;
-                case 1:
-                    if (point.state.famine === 1) {
-                        point.history.push(window.support.createHistoryText('粮食不足的征兆出现了，这是大饥荒的开始，还是命运的恶作剧？'));
-                    }
-                    point.state.famine += 0.1;
-                    point.people *= 0.99;
-                    break;
-                case 2:
-                    point.state.famine += 0.1;
-                    point.people *= 0.98;
-                    break;
-                case 3:
-                    point.state.famine += 0.1;
-                    point.people *= 0.96;
-                    break;
-            }
-            point.people *= 0.99;
-        } else {
-            point.state.famine -= 0.1;
-            if (point.state.famine < 0) {
-                point.state.famine = 0;
-            }
-            point.people *= 1.001;
+        point.goods.farmTool += product * toolWorker;
+        if (point.goods.farmToolMax < point.goods.farmTool) {
+            point.goods.farmTool = point.goods.farmToolMax;
         }
     }
 
@@ -425,7 +384,7 @@ export default class Main extends cc.Component {
                 rate: 0.1,
                 change: 0.22,
             }],
-            tools: [{ // 工具
+            farmTool: [{ // 农具
                 rate: 0.9,
                 change: -0.41,
             }, {
@@ -437,19 +396,6 @@ export default class Main extends cc.Component {
             }, {
                 rate: 0.1,
                 change: 0.55,
-            }],
-            luxury: [{ // 奢侈品
-                rate: 0.9,
-                change: -5,
-            }, {
-                rate: 0.75,
-                change: 1,
-            }, {
-                rate: 0.25,
-                change: 1,
-            }, {
-                rate: 0.1,
-                change: 4.5,
             }],
         };
         for (let key in SAVE_RATE) {
