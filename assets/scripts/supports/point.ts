@@ -1,5 +1,6 @@
 import Base from "./base";
 import Company from "./company";
+import Worker from "./worker";
 
 /**
  * 地点类
@@ -27,12 +28,9 @@ export default class Point extends Base {
     node?: cc.Node;  // 城市的游戏节点
     company: Array<Company>;  // 本地企业
     people: {
-        worker: number,
-        workerMoney: number,
-        manager: number,
-        managerMoney: number,
-        leader: number,
-        leaderMoney: number,
+        worker: Worker,
+        manager: Worker,
+        leader: Worker,
     };
 
     constructor (data: {
@@ -41,12 +39,9 @@ export default class Point extends Base {
         height: number,
         landforms: number,
         people: {
-            worker: number,
-            workerMoney: number,
-            manager: number,
-            managerMoney: number,
-            leader: number,
-            leaderMoney: number,
+            worker: Worker,
+            manager: Worker,
+            leader: Worker,
         },
         level?: number,  // 城市等级
         node?: cc.Node,  // 城市节点
@@ -58,10 +53,11 @@ export default class Point extends Base {
 
         name: string,
         money?: number,
-        goods?: {
+        goods?: {  // TODO: 添加商品类
             foodstuffs?: number,
             foodstuffsMax?: number,
             foodstuffsPrice?: number,
+            foodstuffsList?: Array<{"companyID": number, "goods": number, "life": number}>,
             coalOre?: number,
             coalOreMax?: number,
             coalOrePrice?: number,
@@ -106,7 +102,7 @@ export default class Point extends Base {
         this.y = data.y;
         this.height = data.height;
         this.landforms = data.landforms;
-        this.people = window.support.deepClone(data.people);
+        this.people = window.support.deepClone(data.people);  // TODO: ...
         this.level = data.level || 0;
         this.history = [];
         this.state = {
@@ -123,50 +119,58 @@ export default class Point extends Base {
      */
 
     /**
-     * 人口更新
+     * 售出商品
      */
-    public upgradePeople () {
-        if ((this.people.worker + this.people.manager + this.people.leader) < 1) {
+    sellGoods (goodsKey: string, number: number) {
+        if (!this.goods[goodsKey]) {
             return false;
         }
-        this.goods.foodstuffs -= this.people * 0.40;
-        if (this.goods.foodstuffs < 0) {
-            this.goods.foodstuffs = 0;
 
-            switch (Math.floor(this.state.famine)) {
-                case 0:
-                    this.state.famine += 0.2;
+        this.goods[goodsKey] -= number;
+        // 移除具体公司的商品
+        this.company[]
+        // 增加具体公司的金钱
+    }
+
+    /**
+     * 更新商品物价
+     */
+    upgradePrice () {
+        const SAVE_RATE = {
+            foodstuffs: [{ // 粮食
+                rate: 0.9,
+                change: -0.19,
+            }, {
+                rate: 0.8,
+                change: -0.1,
+            }, {
+                rate: 0.25,
+                change: 0.1,
+            }, {
+                rate: 0.1,
+                change: 0.22,
+            }],
+            farmTool: [{ // 农具
+                rate: 0.9,
+                change: -0.41,
+            }, {
+                rate: 0.75,
+                change: -0.18,
+            }, {
+                rate: 0.25,
+                change: 0.18,
+            }, {
+                rate: 0.1,
+                change: 0.55,
+            }],
+        };
+        for (let key in SAVE_RATE) {
+            for (let json of SAVE_RATE[key]) {
+                if (point.goods[key] > point.goods[key + 'Max'] * json.rate) {
+                    point.goods[key + 'Price'] += json.change;
                     break;
-                case 1:
-                    if (this.state.famine === 1) {
-                        this.history.push(window.support.createHistoryText('粮食不足的征兆出现了，这是大饥荒的开始，还是命运的恶作剧？'));
-                    }
-                    this.state.famine += 0.1;
-                    this.people.worker *= 0.996;
-                    this.people.manager *= 0.997;
-                    this.people.leader *= 0.998;
-                    break;
-                case 2:
-                    this.state.famine += 0.1;
-                    this.people.worker *= 0.988;
-                    this.people.manager *= 0.99;
-                    this.people.leader *= 0.992;
-                    break;
-                case 3:
-                default:
-                    this.state.famine += 0.1;
-                    this.people.worker *= 0.96;
-                    this.people.manager *= 0.965;
-                    this.people.leader *= 0.97;
-                    break;
+                }
             }
-        } else {
-            if (this.state.famine >= 0.1) {
-                this.state.famine -= 0.1;
-            }
-            this.people.worker *= 1.0015;
-            this.people.manager *= 1.0013;
-            this.people.leader *= 1.001;
         }
     }
 }

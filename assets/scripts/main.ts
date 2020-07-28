@@ -222,9 +222,7 @@ export default class Main extends cc.Component {
                     // 地点：window.data.maps[y][x] 的更新
                     let point = window.data.maps[y][x];
                     this.upgradeCityLevel(point);
-                    point.upgradePeople();
                     this.upgradeProduct(point);
-                    this.upgradePrice(point);
                     this.upgradeRandom(point);
                 }
             }
@@ -362,49 +360,6 @@ export default class Main extends cc.Component {
         point.goods.farmTool += product * toolWorker;
         if (point.goods.farmToolMax < point.goods.farmTool) {
             point.goods.farmTool = point.goods.farmToolMax;
-        }
-    }
-
-    /**
-     * 物价增加
-     * @param point
-     */
-    upgradePrice (point: Point) {
-        const SAVE_RATE = {
-            foodstuffs: [{ // 粮食
-                rate: 0.9,
-                change: -0.19,
-            }, {
-                rate: 0.8,
-                change: -0.1,
-            }, {
-                rate: 0.25,
-                change: 0.1,
-            }, {
-                rate: 0.1,
-                change: 0.22,
-            }],
-            farmTool: [{ // 农具
-                rate: 0.9,
-                change: -0.41,
-            }, {
-                rate: 0.75,
-                change: -0.18,
-            }, {
-                rate: 0.25,
-                change: 0.18,
-            }, {
-                rate: 0.1,
-                change: 0.55,
-            }],
-        };
-        for (let key in SAVE_RATE) {
-            for (let json of SAVE_RATE[key]) {
-                if (point.goods[key] > point.goods[key + 'Max'] * json.rate) {
-                    point.goods[key + 'Price'] += json.change;
-                    break;
-                }
-            }
         }
     }
 

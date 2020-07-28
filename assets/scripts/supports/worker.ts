@@ -1,3 +1,5 @@
+import PeopleBase from "./peopleBase";
+
 /**
  * 工人类
  * 工人是企业成员的基础
