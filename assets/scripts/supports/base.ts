@@ -1,56 +1,19 @@
+import Goods from "./base/goods";
+
 export default class Base {
     name: string;
     money: number;
     goods: {  // 货架
-        foodstuffs: number,
-        foodstuffsMax: number,
-        foodstuffsPrice: number,
-        foodstuffsList: Array<{belong: number, number: number, timestamp: number}>
-
-        coalOre: number,
-        coalOreMax: number,
-        coalOrePrice: number,
-        coalOreList: Array<{belong: number, number: number, timestamp: number}>
-
-        ironOre: number,
-        ironOreMax: number,
-        ironOrePrice: number,
-        ironOreList: Array<{belong: number, number: number, timestamp: number}>
-
-        copperOre: number,
-        copperOreMax: number,
-        copperOrePrice: number,
-        copperOreList: Array<{belong: number, number: number, timestamp: number}>
-
-        ironIngot: number,
-        ironIngotMax: number,
-        ironIngotPrice: number,
-        ironIngotList: Array<{belong: number, number: number, timestamp: number}>
-
-        copperIngot: number,
-        copperIngotMax: number,
-        copperIngotPrice: number,
-        copperIngotList: Array<{belong: number, number: number, timestamp: number}>
-
-        farmTool: number,
-        farmToolMax: number,
-        farmToolPrice: number,
-        farmToolList: Array<{belong: number, number: number, timestamp: number}>
-
-        brewery: number,
-        breweryMax: number,
-        breweryPrice: number,
-        breweryList: Array<{belong: number, number: number, timestamp: number}>
-
-        tobacco: number,
-        tobaccoMax: number,
-        tobaccoPrice: number,
-        tobaccoList: Array<{belong: number, number: number, timestamp: number}>
-
-        watchmaker: number,
-        watchmakerMax: number,
-        watchmakerPrice: number,
-        watchmakerList: Array<{belong: number, number: number, timestamp: number}>
+        foodstuffs: Goods,
+        coalOre: Goods,
+        ironOre: Goods,
+        copperOre: Goods,
+        ironIngot: Goods,
+        copperIngot: Goods,
+        farmTool: Goods,
+        brewery: Goods,
+        tobacco: Goods,
+        watchmaker: Goods,
     };
 
     constructor (data: {

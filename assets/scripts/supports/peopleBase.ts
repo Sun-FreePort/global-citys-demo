@@ -31,7 +31,7 @@ export default class PeopleBase {
             if (this.money > need_food * point.goods.foodstuffsPrice) { // 库存金钱足够
                 this.people *= this.fertility_rate;
                 this.money -= need_food * point.goods.foodstuffsPrice;
-                point.goods.foodstuffs -= need_food; // TODO: 使用 Point 的购买方法，以便有效为具体单位付款
+                point.sellGoods("foodstuffs", need_food);
             } else { // 库存金钱不足
                 let buy = this.money / point.goods.foodstuffsPrice;
                 this.people *= this.starvation_rate + buy / need_food / starvation_step;

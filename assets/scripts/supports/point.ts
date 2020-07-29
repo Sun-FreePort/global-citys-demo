@@ -1,6 +1,7 @@
 import Base from "./base";
 import Company from "./company";
 import Worker from "./worker";
+import Goods from "./base/goods";
 
 /**
  * 地点类
@@ -119,21 +120,54 @@ export default class Point extends Base {
      */
 
     /**
-     * 售出商品
+     * TODO: 上架商品
      */
-    sellGoods (goodsKey: string, number: number) {
+    marketGoods (goodsKey: string, number: number) {
         if (!this.goods[goodsKey]) {
             return false;
         }
 
         this.goods[goodsKey] -= number;
         // 移除具体公司的商品
-        this.company[]
-        // 增加具体公司的金钱
+        // this.company
     }
 
     /**
-     * 更新商品物价
+     * 售出商品
+     */
+    sellGoods (goodsKey: string, number: number) {
+        if (!this.goods[goodsKey].number) {
+            return false;
+        }
+
+        this.goods[goodsKey].number -= number;
+        // 移除具体公司的商品
+        let length = this.goods[goodsKey].list.length;
+        this.goods[goodsKey].list = this.goods[goodsKey].list.map(obj => {
+            this.company[obj.companyID].money += number * this.goods[goodsKey].price;  // 增加具体公司的金钱
+            obj.number -= number;
+            return obj;
+        });
+    }
+
+    /**
+     * TODO: 丢弃过期商品
+     */
+    pastDueGoods () {
+        for (let name in this.goods) {
+            this[name].map(goods => {
+                goods.list.map(obj => {
+                    if (obj.life > 0) {  // TODO: Add global instance with timestamp use
+                        return '';
+                    }
+                });
+                goods.list.filter(item => item);
+            });
+        }
+    }
+
+    /**
+     * TODO: 更新商品物价
      */
     upgradePrice () {
         const SAVE_RATE = {
@@ -166,8 +200,8 @@ export default class Point extends Base {
         };
         for (let key in SAVE_RATE) {
             for (let json of SAVE_RATE[key]) {
-                if (point.goods[key] > point.goods[key + 'Max'] * json.rate) {
-                    point.goods[key + 'Price'] += json.change;
+                if (this.goods[key] > this.goods[key + 'Max'] * json.rate) {
+                    this.goods[key + 'Price'] += json.change;
                     break;
                 }
             }
