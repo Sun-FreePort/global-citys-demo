@@ -4,5 +4,6 @@
 export default class Goods {
     name: string;
     price: number;
-    list: Array<{"companyID": number, "number": number, "life": number}>;
+    number: number;
+    list: Array<{"companyKey": number, "number": number, "life": number}>;
 }

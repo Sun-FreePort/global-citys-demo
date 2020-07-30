@@ -285,6 +285,7 @@ export default class Main extends cc.Component {
      * 时间更新
      */
     upgradeTime () {
+        window.data.time.turn++;
         window.data.time.day += 10;
         if (window.data.time.day > 30) {
             window.data.time.day = 1;

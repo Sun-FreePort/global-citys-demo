@@ -18,6 +18,7 @@ declare global {
                 year: number,
                 month: number,
                 day: number,
+                turn: number,
             },
         },
     }
@@ -71,7 +72,7 @@ export default class Support {
 
         return `${time}，${text}。`
     }
-    
+
     public deepClone (obj: any) {
         return JSON.parse(JSON.stringify(obj));
     }

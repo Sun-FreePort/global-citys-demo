@@ -27,7 +27,7 @@ export default class Point extends Base {
     history: Array<string>;
 
     node?: cc.Node;  // 城市的游戏节点
-    company: Array<Company>;  // 本地企业
+    company: {};  // 本地企业
     people: {
         worker: Worker,
         manager: Worker,
@@ -58,7 +58,7 @@ export default class Point extends Base {
             foodstuffs?: number,
             foodstuffsMax?: number,
             foodstuffsPrice?: number,
-            foodstuffsList?: Array<{"companyID": number, "goods": number, "life": number}>,
+            foodstuffsList?: Array<{"companyKey": number, "goods": number, "life": number}>,
             coalOre?: number,
             coalOreMax?: number,
             coalOrePrice?: number,
@@ -120,16 +120,17 @@ export default class Point extends Base {
      */
 
     /**
-     * TODO: 上架商品
+     * 上架商品
      */
-    marketGoods (goodsKey: string, number: number) {
-        if (!this.goods[goodsKey]) {
+    marketGoods (goodsKey: string, companyKey: number, number: number, life: number) {
+        if (this.company[companyKey].goods[goodsKey].number < 1) {
             return false;
         }
+        number = Math.round(number);
 
-        this.goods[goodsKey] -= number;
-        // 移除具体公司的商品
-        // this.company
+        this.company[companyKey].goods[goodsKey].number -= number;
+        this.goods[goodsKey] += number;
+        this.goods[goodsKey].list.push({"companyKey": companyKey, "number": number, "life": life});
     }
 
     /**
@@ -143,25 +144,25 @@ export default class Point extends Base {
         this.goods[goodsKey].number -= number;
         // 移除具体公司的商品
         let length = this.goods[goodsKey].list.length;
+        // todo: 出售逻辑更新，按件出售更合理
         this.goods[goodsKey].list = this.goods[goodsKey].list.map(obj => {
-            this.company[obj.companyID].money += number * this.goods[goodsKey].price;  // 增加具体公司的金钱
-            obj.number -= number;
+            this.company[obj.companyKey].money += number * this.goods[goodsKey].price / length;  // 增加具体公司的金钱
+            obj.number -= number / length;
             return obj;
         });
     }
 
     /**
-     * TODO: 丢弃过期商品
+     * 丢弃过期商品
      */
     pastDueGoods () {
         for (let name in this.goods) {
-            this[name].map(goods => {
-                goods.list.map(obj => {
-                    if (obj.life > 0) {  // TODO: Add global instance with timestamp use
+            this.goods[name] = this.goods[name].map(goods => {
+                goods.list = goods.list.map(obj => {
+                    if (obj.life < window.data.time.turn) {
                         return '';
                     }
-                });
-                goods.list.filter(item => item);
+                }).filter(item => item);
             });
         }
     }

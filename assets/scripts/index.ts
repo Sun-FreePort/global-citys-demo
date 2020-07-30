@@ -165,6 +165,7 @@ export default class Index extends cc.Component {
             year: 30 + Math.round(Math.random() * 5),
             month: 3 + Math.round(Math.random() * 3),
             day: 1 + Math.round(Math.random() * 20),
+            turn: 0,
         };
 
         // 生成城市
